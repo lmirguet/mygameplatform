@@ -27,10 +27,11 @@ research_requested: true
 product_brief_requested: true
 workflow_path: "_bmad/bmm/workflows/workflow-status/paths/method-greenfield.yaml"
 workflow_status:
-  brainstorm-project: "required"
+  brainstorm-project: "_bmad-output/analysis/brainstorming-session-2026-01-11.md"
   research: "required"
-  product-brief: "required"
-  prd: "required"
+  product-brief: "_bmad-output/planning-artifacts/product-brief-mygameplatform-2026-01-11.md"
+  prd: "_bmad-output/planning-artifacts/prd.md"
+  create-ux-design: "_bmad-output/planning-artifacts/ux-design-specification.md"
   create-ux-design: "conditional"
   create-architecture: "required"
   create-epics-and-stories: "required"

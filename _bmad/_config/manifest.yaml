@@ -1,7 +1,7 @@
 installation:
-  version: 6.0.0-alpha.22
-  installDate: 2026-01-10T20:42:52.850Z
-  lastUpdated: 2026-01-10T20:42:52.850Z
+  version: 6.0.0-alpha.23
+  installDate: 2026-01-11T09:52:23.343Z
+  lastUpdated: 2026-01-11T09:52:23.343Z
 modules:
   - core
   - bmgd

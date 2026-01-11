@@ -1,0 +1,80 @@
+# Workflow Init - Project Setup Instructions
+
+<critical>The workflow execution engine is governed by: {project-root}/_bmad/core/tasks/workflow.xml</critical>
+<critical>You MUST have already loaded and processed: workflow-init/workflow.yaml</critical>
+<critical>Communicate in {communication_language} with {user_name}</critical>
+<critical>This workflow handles BOTH new projects AND legacy projects following the BMad Method</critical>
+
+<workflow>
+
+<step n="1" goal="Scan for existing work">
+<output>Welcome to BMad Method, {user_name}!</output>
+
+<action>Perform comprehensive scan for existing work:
+
+- BMM artifacts: PRD, epics, architecture, UX, brief, research, brainstorm
+- Implementation: stories, sprint-status, workflow-status
+- Codebase: source directories, package files, git repo
+- Check both {planning_artifacts} and {implementation_artifacts} locations
+</action>
+
+<action>Categorize into one of these states:
+
+- CLEAN: No artifacts or code (or scaffold only)
+- PLANNING: Has PRD/spec but no implementation
+- ACTIVE: Has stories or sprint status
+- LEGACY: Has code but no BMM artifacts
+- UNCLEAR: Mixed state needs clarification
+</action>
+
+<ask>What's your project called? {{#if project_name}}(Config shows: {{project_name}}){{/if}}</ask>
+<action>Store project_name</action>
+<template-output>project_name</template-output>
+</step>
+
+<step n="2" goal="Choose setup path">
+<check if="state == CLEAN">
+  <output>Perfect! Fresh start detected.</output>
+  <action>Continue to step 3</action>
+</check>
+
+<check if="state == ACTIVE AND workflow_status exists">
+  <output>✅ You already have workflow tracking at: {{workflow_status_path}}
+
+To check progress: Load any BMM agent and run /bmad:bmm:workflows:workflow-status
+
+Happy building! 🚀</output>
+<action>Exit workflow (already initialized)</action>
+</check>
+
+<check if="state != CLEAN">
+  <output>Found existing work:
+{{summary_of_findings}}</output>
+
+<ask>How would you like to proceed?
+
+1. **Continue** - Work with existing artifacts
+2. **Archive & Start Fresh** - Move old work to archive
+3. **Express Setup** - I know exactly what I need
+4. **Guided Setup** - Walk me through options
+
+Choice [1-4]</ask>
+
+  <check if="choice == 1">
+    <action>Set continuing_existing = true</action>
+    <action>Store found artifacts</action>
+    <action>Continue to step 7 (detect track from artifacts)</action>
+  </check>
+
+  <check if="choice == 2">
+    <ask>Archive existing work? (y/n)</ask>
+    <action if="y">Move artifacts to {planning_artifacts}/archive/</action>
+    <output>Ready for fresh start!</output>
+    <action>Continue to step 3</action>
+  </check>
+
+  <check if="choice == 3">
+    <action>Jump to step 3 (express path)</action>
+  </check>
+
+  <check if="choice == 4">

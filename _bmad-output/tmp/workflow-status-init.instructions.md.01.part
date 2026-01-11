@@ -1,0 +1,80 @@
+    <action>Continue to step 4 (guided path)</action>
+  </check>
+</check>
+
+<check if="state == CLEAN">
+  <ask>Setup approach:
+
+1. **Express** - I know what I need
+2. **Guided** - Show me the options
+
+Choice [1 or 2]:</ask>
+
+  <check if="choice == 1">
+    <action>Continue to step 3 (express)</action>
+  </check>
+
+  <check if="choice == 2">
+    <action>Continue to step 4 (guided)</action>
+  </check>
+</check>
+</step>
+
+<step n="3" goal="Express setup path">
+<ask>Is this for:
+1. **New project** (greenfield)
+2. **Existing codebase** (brownfield)
+
+Choice [1/2]:</ask>
+<action>Set field_type based on choice</action>
+
+<ask>Planning approach:
+
+1. **BMad Method** - Full planning for complex projects
+2. **Enterprise Method** - Extended planning with security/DevOps
+
+Choice [1/2]:</ask>
+<action>Map to selected_track: method/enterprise</action>
+
+<output>🚀 **For Quick Flow (minimal planning, straight to code):**
+Load the **quick-flow-solo-dev** agent instead - use Quick Flow agent for faster development</output>
+
+<template-output>field_type</template-output>
+<template-output>selected_track</template-output>
+<action>Jump to step 6 (discovery options)</action>
+</step>
+
+<step n="4" goal="Guided setup - understand project">
+<ask>Tell me about what you're working on. What's the goal?</ask>
+<action>Store user_description</action>
+
+<action>Analyze for field type indicators:
+
+- Brownfield: "existing", "current", "enhance", "modify"
+- Greenfield: "new", "build", "create", "from scratch"
+- If codebase exists, default to brownfield unless user indicates scaffold
+  </action>
+
+<check if="field_type unclear AND codebase exists">
+  <ask>I see existing code. Are you:
+1. **Modifying** existing codebase (brownfield)
+2. **Starting fresh** - code is just scaffold (greenfield)
+
+Choice [1/2]:</ask>
+<action>Set field_type based on answer</action>
+</check>
+
+<action if="field_type not set">Set based on codebase presence</action>
+
+<action>Check for game development keywords</action>
+<check if="game_detected">
+<output>🎮 **GAME DEVELOPMENT DETECTED**
+
+For game development, install the BMGD module:
+
+```bash
+bmad install bmgd
+```
+
+Continue with software workflows? (y/n)</output>
+<ask>Choice:</ask>

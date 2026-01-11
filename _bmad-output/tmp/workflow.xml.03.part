@@ -1,0 +1,55 @@
+                  docs, consider deployment docs, skip payment</example>
+                <action>Load all identified relevant documents</action>
+                <action>Store combined content in variable: {pattern_name_content}</action>
+                <note>When in doubt, LOAD IT - context is valuable, being thorough is better than missing critical info</note>
+              </strategy>
+              <action>Mark pattern as RESOLVED, skip to next pattern</action>
+            </check>
+          </substep>
+
+          <substep n="2b" title="Try Whole Document if No Sharded Found">
+            <check if="no sharded matches found OR no sharded pattern exists">
+              <action>Attempt glob match on 'whole' pattern (e.g., "{output_folder}/*prd*.md")</action>
+              <check if="matches found">
+                <action>Load ALL matching files completely (no offset/limit)</action>
+                <action>Store content in variable: {pattern_name_content} (e.g., {prd_content})</action>
+                <action>Mark pattern as RESOLVED, skip to next pattern</action>
+              </check>
+            </check>
+          </substep>
+
+          <substep n="2c" title="Handle Not Found">
+            <check if="no matches for sharded OR whole">
+              <action>Set {pattern_name_content} to empty string</action>
+              <action>Note in session: "No {pattern_name} files found" (not an error, just unavailable, offer use change to provide)</action>
+            </check>
+          </substep>
+        </step>
+
+        <step n="3" title="Report Discovery Results">
+          <action>List all loaded content variables with file counts</action>
+          <example>
+            ✓ Loaded {prd_content} from 5 sharded files: prd/index.md, prd/requirements.md, ...
+            ✓ Loaded {architecture_content} from 1 file: Architecture.md
+            ✓ Loaded {epics_content} from selective load: epics/epic-3.md
+            ○ No ux_design files found
+          </example>
+          <note>This gives workflow transparency into what context is available</note>
+        </step>
+      </flow>
+
+    </protocol>
+  </protocols>
+
+  <llm final="true">
+    <critical-rules>
+      • This is the complete workflow execution engine
+      • You MUST Follow instructions exactly as written
+      • The workflow execution engine is governed by: {project-root}/_bmad/core/tasks/workflow.xml
+      • You MUST have already loaded and processed: {installed_path}/workflow.yaml
+      • This workflow uses INTENT-DRIVEN PLANNING - adapt organically to product type and context
+      • YOU ARE FACILITATING A CONVERSATION With a user to produce a final document step by step. The whole process is meant to be
+      collaborative helping the user flesh out their ideas. Do not rush or optimize and skip any section.
+    </critical-rules>
+  </llm>
+</task> 

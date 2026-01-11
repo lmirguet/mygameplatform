@@ -1,0 +1,20 @@
+
+<template-output>field_type</template-output>
+<template-output>selected_track</template-output>
+<action>Jump to step 6 (discovery options)</action>
+</step>
+
+<step n="4" goal="Guided setup - understand project">
+<ask>Tell me about what you're working on. What's the goal?</ask>
+<action>Store user_description</action>
+
+<action>Analyze for field type indicators:
+
+- Brownfield: "existing", "current", "enhance", "modify"
+- Greenfield: "new", "build", "create", "from scratch"
+- If codebase exists, default to brownfield unless user indicates scaffold
+  </action>
+
+<check if="field_type unclear AND codebase exists">
+  <ask>I see existing code. Are you:
+1. **Modifying** existing codebase (brownfield)

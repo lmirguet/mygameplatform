@@ -1,0 +1,80 @@
+  <ask>Select any you'd like to include:
+
+1. 🧠 **Brainstorm** - Creative exploration and ideation
+2. 🔍 **Research** - Technical/competitive analysis
+3. 📋 **Product Brief** - Strategic product planning (recommended)
+
+Enter numbers (e.g., "1,3" or "all" or "none"): </ask>
+</check>
+
+<check if="field_type == brownfield AND selected_track in [method, enterprise]">
+  <output>Optional discovery workflows:</output>
+  <ask>Include any of these?
+
+1. 🧠 **Brainstorm** - Creative exploration
+2. 🔍 **Research** - Domain analysis
+
+Enter numbers (e.g., "1,2" or "none"): </ask>
+</check>
+
+<action>Parse selections and set:
+
+- brainstorm_requested
+- research_requested
+- product_brief_requested (if applicable)
+  </action>
+
+<template-output>brainstorm_requested</template-output>
+<template-output>research_requested</template-output>
+<template-output>product_brief_requested</template-output>
+
+<check if="brownfield">
+  <output>💡 **Note:** For brownfield projects, run document-project workflow first to analyze your codebase.</output>
+</check>
+</step>
+
+<step n="7" goal="Detect track from artifacts" if="continuing_existing OR migrating_legacy">
+<action>Analyze artifacts to detect track:
+- Has PRD → BMad Method
+- Has Security/DevOps → Enterprise Method
+- Has tech-spec only → Suggest switching to quick-flow-solo-dev agent
+</action>
+
+<output>Detected: **{{detected_track}}** based on {{found_artifacts}}</output>
+<ask>Correct? (y/n)</ask>
+
+<ask if="n">Which BMad Method track instead?
+
+1. BMad Method
+2. Enterprise Method
+3. Switch to Quick Flow (use quick-flow-solo-dev agent)
+
+Choice:</ask>
+
+<action>Set selected_track</action>
+<template-output>selected_track</template-output>
+</step>
+
+<step n="8" goal="Generate workflow path">
+<action>Load path file: {path_files}/{{selected_track}}-{{field_type}}.yaml</action>
+<action>Build workflow_items from path file</action>
+<action>Scan for existing completed work and update statuses</action>
+<action>Set generated date</action>
+
+<template-output>generated</template-output>
+<template-output>workflow_path_file</template-output>
+<template-output>workflow_items</template-output>
+</step>
+
+<step n="9" goal="Create tracking file">
+<output>Your BMad workflow path:
+
+**Track:** {{selected_track}}
+**Type:** {{field_type}}
+**Project:** {{project_name}}
+
+{{#if brownfield}}Prerequisites: document-project{{/if}}
+{{#if has_discovery}}Discovery: {{list_selected_discovery}}{{/if}}
+
+{{workflow_path_summary}}
+</output>

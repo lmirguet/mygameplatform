@@ -1,0 +1,20 @@
+2. **Starting fresh** - code is just scaffold (greenfield)
+
+Choice [1/2]:</ask>
+<action>Set field_type based on answer</action>
+</check>
+
+<action if="field_type not set">Set based on codebase presence</action>
+
+<action>Check for game development keywords</action>
+<check if="game_detected">
+<output>🎮 **GAME DEVELOPMENT DETECTED**
+
+For game development, install the BMGD module:
+
+```bash
+bmad install bmgd
+```
+
+Continue with software workflows? (y/n)</output>
+<ask>Choice:</ask>

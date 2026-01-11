@@ -1,0 +1,20 @@
+    <action>Continue to step 4 (guided path)</action>
+  </check>
+</check>
+
+<check if="state == CLEAN">
+  <ask>Setup approach:
+
+1. **Express** - I know what I need
+2. **Guided** - Show me the options
+
+Choice [1 or 2]:</ask>
+
+  <check if="choice == 1">
+    <action>Continue to step 3 (express)</action>
+  </check>
+
+  <check if="choice == 2">
+    <action>Continue to step 4 (guided)</action>
+  </check>
+</check>

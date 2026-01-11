@@ -1,0 +1,26 @@
+
+<ask>Create workflow tracking file? (y/n)</ask>
+
+<check if="y">
+  <action>Generate YAML from template with all variables</action>
+  <action>Save to {planning_artifacts}/bmm-workflow-status.yaml</action>
+  <action>Identify next workflow and agent</action>
+
+<output>✅ **Created:** {planning_artifacts}/bmm-workflow-status.yaml
+
+**Next:** {{next_workflow_name}}
+**Agent:** {{next_agent}}
+**Command:** /bmad:bmm:workflows:{{next_workflow_id}}
+
+{{#if next_agent not in [analyst, pm]}}
+💡 Start new chat with **{{next_agent}}** agent first.
+{{/if}}
+
+To check progress: /bmad:bmm:workflows:workflow-status
+
+Happy building! 🚀</output>
+</check>
+
+</step>
+
+</workflow>

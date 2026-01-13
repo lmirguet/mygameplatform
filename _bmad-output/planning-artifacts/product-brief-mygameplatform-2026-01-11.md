@@ -9,7 +9,7 @@ date: 2026-01-11
 author: Laurent
 ---
 
-# Product Brief: {{project_name}}
+# Product Brief: mygameplatform
 
 <!-- Content will be appended sequentially through collaborative workflow steps -->
 
@@ -37,12 +37,12 @@ Casual board‑game players face paywalls, upsells, or cumbersome access on curr
 A self-funded, always-free platform that prioritizes instant play:
 - 2‑minute account creation, no payment methods ever required.
 - Immediate lobby discovery/auto-join plus lightweight host tools to start games fast.
-- Cross-device access (web/mobile) with reliable reconnect so casuals can drop and rejoin.
+- Cross-device access (web/mobile) with clear disconnect handling and a fast path to join a new lobby (no state restore in MVP).
 
 ### Key Differentiators
 - “Forever free” stance backed by self-funding; no hidden monetization.
 - Instant-play UX: near-zero wait to get into an active lobby.
-- Casual-first reliability: reconnect-friendly, low-friction sessions for short play windows.
+- Casual-first reliability: low-friction sessions for short play windows, with fail-forward UX when sessions are lost.
 
 ## Target Users
 
@@ -80,7 +80,7 @@ A self-funded, always-free platform that prioritizes instant play:
 
 ### Core Features
 - Account creation and instant play: 2–4 minute signup; join/host lobby quickly.
-- Game set: Connect4, Checkers.
+- Game set: Connect4, Draughts (10x10) (International Draughts ruleset).
 - Lobby & session flow: browse/auto-join open lobbies; host can start/end a session; basic fair-play enforcement (rules validation).
 - Cross-device: responsive web experience (desktop + mobile browser).
 
@@ -95,6 +95,6 @@ A self-funded, always-free platform that prioritizes instant play:
 - Stable sessions with basic fairness (rule validation); reconnect not required for MVP.
 
 ### Future Vision
-- Add more games beyond Connect4/Checkers.
-- Later: reconnect grace, stronger anti-abuse/moderation, richer social features.
+- Improve reliability, abuse prevention, and UX polish (including better disconnect handling and fairness/observability).
+- Later: stronger anti-abuse/moderation and richer social features.
 - Optional future monetization/cosmetics if the “forever free” stance is revisited.

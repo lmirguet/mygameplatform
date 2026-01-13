@@ -11,10 +11,10 @@ workflowType: 'ux-design'
 lastStep: 14
 ---
 
-# UX Design Specification {{project_name}}
+# UX Design Specification mygameplatform
 
-**Author:** {{user_name}}
-**Date:** {{date}}
+**Author:** Laurent
+**Date:** 2026-01-13
 
 ---
 
@@ -23,7 +23,7 @@ lastStep: 14
 ## Executive Summary
 
 ### Project Vision
-Forever-free, instant-play web board-game platform (Connect4/Checkers MVP) with 2–4 minute signup-to-play, fast lobby discovery/hosting, and rules-enforced games via shareable URLs on desktop/mobile.
+Forever-free, instant-play web board-game platform (Connect4 + Draughts (10x10) MVP) with 2–4 minute signup-to-play, fast lobby discovery/hosting, and rules-enforced games via shareable URLs on desktop/mobile.
 
 ### Target Users
 Casual drop-in players (12–80, ~1x/week, <1h sessions); hosts creating quick tables; future indie publishers (post-MVP).
@@ -42,7 +42,8 @@ Casual drop-in players (12–80, ~1x/week, <1h sessions); hosts creating quick t
 
 ### Defining Experience
 - Core loop: land → see open lobbies (game displayed) → join a lobby or create one → start play within 2–4 minutes.
-- MVP games: Connect4, Checkers; rules-enforced, authoritative play.
+- MVP games: Connect4 and Draughts (10x10); rules-enforced, authoritative play.
+- Draughts (10x10) uses International Draughts rules: forced captures, maximum-capture priority, multi-jumps, flying kings; draw by mutual agreement.
 
 ### Platform Strategy
 - Web MPA, desktop/mobile browsers; touch + mouse; no offline.
@@ -135,7 +136,7 @@ Casual drop-in players (12–80, ~1x/week, <1h sessions); hosts creating quick t
 
 ### 2.1 Defining Experience
 - Defining interaction: land → view lobby list (game shown) → join or create lobby → start play within 2–4 minutes.
-- MVP games: Connect4 and Checkers; rules enforced; invite links deep-link to lobby.
+- MVP games: Connect4 and Draughts (10x10); rules enforced; invite links deep-link to lobby.
 
 ### 2.2 User Mental Model
 - Users expect “click a link, join a table” like BGA/Discord invites; no payments or long forms.
@@ -248,10 +249,10 @@ flowchart TD
 ### Custom Components
 - **Lobby Table**: Columns (Game, Seats, Status/Players, Action). States: default, loading, empty, full. Responsive stacking on mobile. Optional sort/filter later.
 - **Lobby Row Action**: Primary Join; secondary Create/disabled when full; host controls visible when you own the lobby.
-- **Create Lobby Modal**: Fields: game (default Connect4/Checkers), seats, visibility (optional). Actions: Create/Cancel. Validation/error states.
+- **Create Lobby Modal**: Fields: game (default Connect4/Draughts (10x10)), seats, visibility (optional). Actions: Create/Cancel. Validation/error states.
 - **Invite Banner/Toast**: After lobby creation, copy-link CTA with confirmation.
 - **Disconnect Notice**: Inline/modal message “session lost” + CTA “Join another lobby.”
-- **Game Board Shell**: Hosts Connect4/Checkers board, turn indicator, move feedback, result state; header with back/exit.
+- **Game Board Shell**: Hosts Connect4 or Draughts (10x10) board, turn indicator, move feedback, result state; header with back/exit.
 
 ### Component Implementation Strategy
 - Build custom components atop design tokens; keep variants minimal. Ensure responsive behavior and keyboard/focus states.
@@ -295,10 +296,10 @@ flowchart TD
 - Mobile <768px; Tablet 768–1023px; Desktop ≥1024px; mobile-first media queries.
 
 ### Accessibility Strategy
-- Target WCAG 2.1 AA basics: contrast 4.5:1 text; visible focus; keyboard operable dialogs/tables; ARIA labels for buttons/links; touch targets ≥44px. No advanced a11y beyond basics for MVP.
+- No formal accessibility conformance target for MVP; follow basic best practices as feasible (contrast, visible focus, clear labels, touch targets, semantic HTML).
 
 ### Testing Strategy
-- Real devices (iOS/Android); desktop Chrome/Firefox/Safari; keyboard-only checks; screen reader smoke (VoiceOver/NVDA); automated a11y linting; responsive snapshots.
+- Real devices (iOS/Android); desktop Chrome/Firefox/Safari; keyboard-only checks; responsive snapshots; screen reader smoke tests if time permits.
 
 ### Implementation Guidelines
 - Semantic HTML; mobile-first CSS with relative units; manage focus for modals; skip-to-content; aria-live/toasts for system messages; optimize assets for mobile.

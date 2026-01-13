@@ -37,7 +37,7 @@ Architecture workflow initialized on 2026-01-11 with the following input documen
 The PRD groups functional requirements into these architectural areas:
 
 - **Account & Identity**: basic user identity and session handling to support lobby creation/join and ownership.
-- **Game Catalog & Selection**: selecting from a small initial catalog (Connect4, Checkers) with room to expand.
+- **Game Catalog & Selection**: selecting from a small initial catalog (Connect4, Draughts (10x10)) with room to expand.
 - **Lobby Discovery & Joining**: browse/auto-join open lobbies; discoverability and low-friction entry.
 - **Hosting & Session Control**: host creates lobbies, starts/ends sessions, shares invites.
 - **Gameplay (Authoritative, Rules-Enforced)**: server-authoritative game state and move validation; deterministic rules for shipped games.

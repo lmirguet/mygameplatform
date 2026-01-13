@@ -13,12 +13,26 @@ classification:
   complexity: low
   projectContext: greenfield
 workflow_completed: true
+workflow: 'edit'
+lastEdited: '2026-01-13'
+editHistory:
+  - date: '2026-01-13'
+    changes: 'Replaced Checkers with Draughts (10x10) worldwide canonical ruleset; added explicit FR21–FR28 for Connect4 + International Draughts rules/outcomes; resolved template placeholders in title/author/date.'
+date: '2026-01-13'
 ---
 
-# Product Requirements Document - {{project_name}}
+# Product Requirements Document - mygameplatform
 
-**Author:** {{user_name}}
-**Date:** {{date}}
+**Author:** Laurent
+**Date:** 2026-01-13
+
+## Executive Summary
+
+Forever-free multiplayer board-game platform for casual players: create an account fast, join or host an active lobby, and play rules-enforced games on desktop/mobile browsers via shareable URLs.
+
+MVP games: Connect4 and **Draughts (10x10)**. Draughts uses a single canonical worldwide ruleset: International Draughts (forced captures, maximum-capture priority, multi-jumps, flying kings, draw by mutual agreement).
+
+Differentiator: no paywalls or monetization friction; optimize time-to-first-game and lobby liquidity for drop-in sessions.
 
 ## Project Classification
 - Project type: web_app (MPA with real-time play)
@@ -38,7 +52,7 @@ workflow_completed: true
 
 ### Technical Success
 - Baseline availability (no strict SLO) with reconnect success rate measured; monitor disconnect-induced churn.
-- Rule-validation correctness for shipped games (Connect4, Checkers).
+- Rule-validation correctness for shipped games (Connect4, Draughts (10x10)).
 - Page-to-WebSocket connect time tracked to inform latency improvements.
 
 ### Measurable Outcomes
@@ -52,14 +66,14 @@ workflow_completed: true
 
 ### MVP - Minimum Viable Product
 - Account creation and instant play (2–4 minute signup; join/host quickly).
-- Games: Connect4, Checkers.
+- Games: Connect4, Draughts (10x10).
 - Lobby/session flow: browse/auto-join open lobbies; host start/end; basic rule validation.
 - Cross-device: responsive web (desktop + mobile browser).
 
 ### Growth Features (Post-MVP)
 - Reconnect grace window and transport health hooks.
 - Stronger moderation/abuse telemetry and report flow.
-- Additional games beyond Connect4/Checkers.
+- Additional games beyond Connect4/Draughts (10x10)
 
 ### Vision (Future)
 - Broader catalog with day-and-date digital launches.
@@ -82,7 +96,7 @@ workflow_completed: true
 
 ### Journey 3: Host — Quick Table Setup for Friends
 - Device: desktop browser.
-- Flow: Logs in → creates lobby for Connect4/Checkers → shares invite link → starts when two seats filled → can end session.
+- Flow: Logs in → creates lobby for Connect4/Draughts (10x10) → shares invite link → starts when two seats filled → can end session.
 - Aha: Can spin up a game and start within minutes; no payments or complex settings.
 - Outcome: Uses platform for casual friend/family sessions weekly.
 
@@ -93,7 +107,7 @@ workflow_completed: true
 - Instant signup + lobby discovery/auto-join.
 - Host controls: create lobby, start/end, share invites.
 - Clear handling of disconnects in MVP (no reconnect): messaging and fast rejoin path.
-- Rule validation for Connect4/Checkers.
+- Rule validation for Connect4/Draughts (10x10).
 - Cross-device responsive web (mobile+desktop).
 
 ## Web App Specific Requirements
@@ -133,12 +147,12 @@ workflow_completed: true
 
 ### MVP Feature Set (Phase 1)
 - Journeys: Casual happy path; Host quick setup; Edge: disconnect (messaging/fast rejoin to new lobby).
-- Must-haves: 2–4 min signup-to-play; lobby list + auto-join; host start/end; rule validation for Connect4/Checkers; responsive web; WebSockets; invite links.
+- Must-haves: 2–4 min signup-to-play; lobby list + auto-join; host start/end; rule validation for Connect4/Draughts (10x10); responsive web; WebSockets; invite links.
 
 ### Post-MVP Features (Phase 2)
 - Reconnect grace + transport health hooks.
 - Moderation/abuse telemetry & report flow.
-- Additional games beyond Connect4/Checkers.
+- Additional games (mono or multi-player, more complex than connect4 and draughts)
 
 ### Phase 3 (Expansion)
 - Richer social (friends/events/ladders).
@@ -158,7 +172,7 @@ workflow_completed: true
 - FR3: A user can view and edit basic profile fields (username, avatar optional) without payment details.
 
 ### Game Catalog & Selection
-- FR4: A user can view available games (Connect4, Checkers) with basic rules/players info.
+- FR4: A user can view available games (Connect4, Draughts (10x10)) with basic rules/players info.
 - FR5: A user can pick a game and proceed directly to join/host flow.
 
 ### Lobby Discovery & Joining
@@ -173,7 +187,17 @@ workflow_completed: true
 ### Gameplay (Authoritative, Rules-Enforced)
 - FR11: Players in a session can make moves according to game rules; illegal moves are rejected.
 - FR12: The system updates and shares canonical game state to all session players after each valid move.
-- FR13: A session concludes with a clear game result (win/lose/draw) per rules for Connect4 and Checkers.
+- FR13: A session concludes with a clear game result (win/lose/draw) per rules for Connect4 and Draughts (10x10).
+
+#### Draughts (10x10) Ruleset (International Draughts)
+- FR21: The system implements Connect4 rules (7x6 board, gravity drop into a column, alternating turns) and rejects illegal moves (invalid column, full column, wrong turn).
+- FR22: The system detects and communicates Connect4 outcomes (4-in-a-row horizontal/vertical/diagonal, draw when board is full).
+- FR23: The system implements draughts gameplay on a 10x10 board (International Draughts ruleset) and rejects illegal moves.
+- FR24: The system enforces forced captures for draughts (a capture must be made when available), including backward captures for men.
+- FR25: The system enforces maximum-capture priority for draughts when multiple capture options exist (player must choose a capture sequence that captures the maximum number of pieces).
+- FR26: The system enforces multi-jump capture sequences for draughts within a single turn when available (continuation captures required until none remain).
+- FR27: The system performs kinging for draughts when a piece reaches the last rank, and kings have “flying” movement/captures (multi-square diagonals) per International Draughts rules.
+- FR28: The system detects and communicates draughts outcomes (win/loss), and supports draws when both players agree to a draw.
 
 ### Invites & Sharing
 - FR14: A host or player can copy an invite link to a lobby/session for others to join.

@@ -1,1 +1,18 @@
 .codex
+.env
+.env.*
+!.env.example
+
+# Go
+.go-cache/
+.go-modcache/
+.go-path/
+
+# Node / Vite
+node_modules/
+web/node_modules/
+web/dist/
+.npm-cache/
+
+# BMAD temp reads
+_bmad-output/_tmp_read/

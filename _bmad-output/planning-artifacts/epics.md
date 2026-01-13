@@ -23,7 +23,7 @@ This document provides the complete epic and story breakdown for mygameplatform,
 FR1: A visitor can create an account in one flow without providing payment information.
 FR2: A registered user can sign in on desktop or mobile browser.
 FR3: A user can view and edit basic profile fields (username, avatar optional) without payment details.
-FR4: A user can view available games (Connect4, Checkers) with basic rules/players info.
+FR4: A user can view available games (Connect4, Draughts (10x10)) with basic rules/players info.
 FR5: A user can pick a game and proceed directly to join/host flow.
 FR6: A user can see a list of open lobbies for a selected game with seat availability.
 FR7: A user can auto-join an open lobby and take an available seat.
@@ -32,15 +32,15 @@ FR9: A host can start a session once minimum seats are filled and end the sessio
 FR10: A host can remove a player from the session before or during play.
 FR11: Players in a session can make moves according to game rules; illegal moves are rejected.
 FR12: The system updates and shares canonical game state to all session players after each valid move.
-FR13: A session concludes with a clear game result (win/lose/draw) per rules for Connect4 and Checkers.
+FR13: A session concludes with a clear game result (win/lose/draw) per rules for Connect4 and Draughts (10x10).
 FR21: The system implements Connect4 rules (7x6 board, gravity drop into a column, alternating turns) and rejects illegal moves (invalid column, full column, wrong turn).
 FR22: The system detects and communicates Connect4 outcomes (4-in-a-row horizontal/vertical/diagonal, draw when board is full).
-FR23: The system implements draughts/checkers gameplay on a 10x10 board (per your chosen ruleset) and rejects illegal moves.
-FR24: The system enforces forced captures for draughts/checkers (a capture must be made when available), including backward captures for men.
-FR25: The system enforces multi-jump capture sequences for draughts/checkers within a single turn when available (continuation captures required until none remain).
-FR26: The system performs kinging for draughts/checkers when a piece reaches the last rank, and kings have “flying” movement/captures (multi-square diagonals) per your ruleset.
-FR27: The system detects and communicates draughts/checkers outcomes (win/loss), and supports draws when both players agree to a draw.
-FR28: The web client provides clear, game-specific feedback for illegal moves and shows the current turn, last move, and result state for both games.
+FR23: The system implements draughts gameplay on a 10x10 board (International Draughts ruleset) and rejects illegal moves.
+FR24: The system enforces forced captures for draughts (a capture must be made when available), including backward captures for men.
+FR25: The system enforces maximum-capture priority for draughts when multiple capture options exist (player must choose a capture sequence that captures the maximum number of pieces).
+FR26: The system enforces multi-jump capture sequences for draughts within a single turn when available (continuation captures required until none remain).
+FR27: The system performs kinging for draughts when a piece reaches the last rank, and kings have “flying” movement/captures (multi-square diagonals) per International Draughts rules.
+FR28: The system detects and communicates draughts outcomes (win/loss), and supports draws when both players agree to a draw.
 FR14: A host or player can copy an invite link to a lobby/session for others to join.
 FR15: An invited user can follow a link and land directly in the correct game/lobby context after signup/login.
 FR16: If a player disconnects, the system communicates loss of session and offers fast path to rejoin a new lobby (no state restore in MVP).
@@ -76,14 +76,14 @@ NFR8: (Integration) None required in MVP (no external payments or third-party sy
 - Rate limiting: per-IP + per-account limits (especially for lobby create/join).
 - Responsive UX: mobile-first responsive layouts; touch + mouse input; recent desktop + mobile browsers.
 - UX “always a way forward”: clear, friendly error messages (illegal move, full lobby, etc.) and disconnect flow that fails forward (e.g., “session lost” + CTA to join another lobby).
-- Accessibility baseline: WCAG 2.1 AA basics (contrast, visible focus, keyboard-operable dialogs/tables, ARIA labels, touch targets ≥44px) plus basic a11y testing (keyboard-only + screen reader smoke + automated checks).
+- Accessibility: no formal requirement for MVP; follow basic best practices as feasible (contrast, visible focus, clear labels, touch targets).
 
 ### FR Coverage Map
 
 FR1: Epic 1 - Account signup (no payment)
 FR2: Epic 1 - Sign in on desktop/mobile
 FR3: Epic 1 - Basic profile management
-FR4: Epic 2 - View available games (Connect4 now; others later)
+FR4: Epic 2 - View available games (Connect4, Draughts (10x10))
 FR5: Epic 2 - Game selection into join/host flow
 FR6: Epic 2 - Browse open lobbies with seat availability
 FR7: Epic 2 - Auto-join an open lobby and take a seat
@@ -95,19 +95,19 @@ FR12: Epic 3 (Connect4) / Epic 4 (Draughts) - Authoritative shared state updates
 FR13: Epic 3 (Connect4) / Epic 4 (Draughts) - Game results (win/lose/draw per game rules)
 FR14: Epic 2 - Copy invite link to lobby/session
 FR15: Epic 2 - Invite link lands user in correct context after signup/login
-FR16: Epic 5 (Deferred) - Disconnect messaging and fail-forward “rejoin new lobby” flow
-FR17: Epic 6 (Deferred) - Record session events for troubleshooting/fairness
+FR16: Epic 5 - Disconnect messaging and fail-forward “rejoin new lobby” flow
+FR17: Epic 6 - Record session events for troubleshooting/fairness
 FR18: Epic 2 - Responsive, usable experience on recent desktop/mobile browsers
 FR19: Epic 2 - Shareable URLs for lobby/session; deep link into context
-FR20: Epic 7 (Deferred) - Track 2–4 minute onboarding funnel/metrics
+FR20: Epic 7 - Track 2–4 minute onboarding funnel/metrics
 FR21: Epic 3 - Connect4 move legality and turn enforcement
 FR22: Epic 3 - Connect4 win/draw detection
-FR23: Epic 4 - 10x10 draughts/checkers core rules + illegal move rejection
+FR23: Epic 4 - Draughts (10x10) gameplay (International Draughts ruleset) + illegal move rejection
 FR24: Epic 4 - Forced captures (including backward captures for men)
-FR25: Epic 4 - Multi-jump captures in a single turn
-FR26: Epic 4 - Kinging + flying kings
-FR27: Epic 4 - Draughts outcomes incl. mutual-agreement draw
-FR28: Epic 3 (Connect4) / Epic 4 (Draughts) - Clear game feedback, turn/last move/result UI
+FR25: Epic 4 - Maximum-capture priority
+FR26: Epic 4 - Multi-jump capture sequences in a single turn
+FR27: Epic 4 - Kinging + flying kings
+FR28: Epic 3 (Connect4) / Epic 4 (Draughts) - Outcomes + clear game result communication (incl. mutual-agreement draw for draughts)
 
 ## Epic List
 
@@ -115,8 +115,8 @@ FR28: Epic 3 (Connect4) / Epic 4 (Draughts) - Clear game feedback, turn/last mov
 Users can sign up, sign in, and manage a minimal profile so they can participate in sessions.
 **FRs covered:** FR1, FR2, FR3
 
-### Epic 2: Connect4 Discovery, Lobby Join/Create, and Invite Links
-Users can find Connect4, join an existing lobby or create a new one, and invite others via shareable links/URLs (desktop/mobile-friendly).
+### Epic 2: Game Discovery, Lobby Join/Create, and Invite Links
+Users can discover available games, join an existing lobby or create a new one, and invite others via shareable links/URLs (desktop/mobile-friendly).
 **FRs covered:** FR4, FR5, FR6, FR7, FR8, FR14, FR15, FR18, FR19
 
 ### Epic 3: Connect4 Session Control + Real-Time Gameplay
@@ -124,18 +124,18 @@ Players can start a Connect4 session, make rules-enforced moves via real-time up
 **FRs covered:** FR9, FR10, FR11, FR12, FR13, FR21, FR22, FR28
 
 ### Epic 4: Draughts 10x10 (Flying Kings) Gameplay
-Users can play draughts/checkers on a 10x10 board with your selected rules (forced captures, multi-jump, backward captures for men, flying kings, mutual-agreement draw).
+Users can play draughts on a 10x10 board (International Draughts) with forced captures, multi-jumps, backward captures for men, maximum-capture priority, flying kings, and mutual-agreement draw.
 **FRs covered:** FR11, FR12, FR13, FR23, FR24, FR25, FR26, FR27, FR28
 
-### Epic 5: Resilience UX — Disconnect Handling (Deferred)
+### Epic 5: Resilience UX — Disconnect Handling
 If a player disconnects, the product communicates what happened and provides a “fast path” forward (MVP says no state restore).
 **FRs covered:** FR16
 
-### Epic 6: Observability & Fair Play Signals (Deferred)
+### Epic 6: Observability & Fair Play Signals
 The system records session events for troubleshooting and fairness checks (and supports basic operational visibility).
 **FRs covered:** FR17
 
-### Epic 7: Onboarding Speed Metrics (Deferred)
+### Epic 7: Onboarding Speed Metrics
 The product tracks and optimizes the “landing → seated in lobby” funnel against the target.
 **FRs covered:** FR20
 
@@ -151,7 +151,7 @@ So that subsequent stories can be implemented efficiently and consistently.
 
 **Acceptance Criteria:**
 
-**FRs:** FR1, FR2, FR3
+**FRs:** (foundation story)
 
 **Given** the architecture specifies a Vite + React + TypeScript starter for the web client
 **When** I initialize the web project
@@ -239,11 +239,11 @@ So that my identity is visible and consistent in lobbies and games.
 **When** I call `PATCH /api/v1/me`
 **Then** the request is rejected with validation errors
 
-## Epic 2: Connect4 Discovery, Lobby Join/Create, and Invite Links
+## Epic 2: Game Discovery, Lobby Join/Create, and Invite Links
 
-Users can find Connect4, join an existing lobby or create a new one, and invite others via shareable links/URLs (desktop/mobile-friendly).
+Users can discover available games, join an existing lobby or create a new one, and invite others via shareable links/URLs (desktop/mobile-friendly).
 
-### Story 2.1: List games (authenticated) with “coming soon”
+### Story 2.1: List games (authenticated)
 
 As a signed-in user,
 I want to view the available games on the platform,
@@ -257,7 +257,7 @@ So that I can choose what to play next.
 **When** I request the games list via `GET /api/v1/games`
 **Then** I receive a list that includes at least:
 **And** it shows **Connect4** as available/playable
-**And** it shows **Checkers** as “coming soon” (not playable in MVP)
+**And** it shows **Draughts (10x10)** as available/playable
 
 **Given** I am not authenticated
 **When** I call `GET /api/v1/games`
@@ -267,10 +267,10 @@ So that I can choose what to play next.
 **When** the service logs the request
 **Then** it does not log sensitive auth material (e.g., raw JWTs)
 
-### Story 2.2: List public Connect4 lobbies (authenticated) with seat availability
+### Story 2.2: List public lobbies (authenticated) with seat availability
 
 As a signed-in user,
-I want to view the list of public Connect4 lobbies and see if seats are available,
+I want to view the list of public lobbies for a selected game and see if seats are available,
 So that I can quickly join an open game.
 
 **Acceptance Criteria:**
@@ -278,22 +278,22 @@ So that I can quickly join an open game.
 **FRs:** FR6
 
 **Given** I am authenticated with a valid JWT
-**When** I request the lobby list via `GET /api/v1/lobbies?game=connect4`
-**Then** I receive a list of public lobbies for Connect4
+**When** I request the lobby list via `GET /api/v1/lobbies?game={game_id}`
+**Then** I receive a list of public lobbies for that game
 **And** each lobby includes enough information to determine seat availability (e.g., max seats = 2, current occupied seats)
 
 **Given** I am not authenticated
-**When** I call `GET /api/v1/lobbies?game=connect4`
+**When** I call `GET /api/v1/lobbies?game={game_id}`
 **Then** the request is rejected as unauthorized
 
 **Given** there are no open lobbies
-**When** I call `GET /api/v1/lobbies?game=connect4`
+**When** I call `GET /api/v1/lobbies?game={game_id}`
 **Then** I receive an empty list (not an error)
 
-### Story 2.3: Create a public Connect4 lobby (2 seats)
+### Story 2.3: Create a public lobby (2 seats)
 
 As a signed-in user,
-I want to create a public Connect4 lobby with exactly 2 player seats,
+I want to create a public lobby for a selected game with exactly 2 player seats,
 So that I can invite someone or wait for another player to join.
 
 **Acceptance Criteria:**
@@ -301,7 +301,7 @@ So that I can invite someone or wait for another player to join.
 **FRs:** FR8
 
 **Given** I am authenticated with a valid JWT
-**When** I create a lobby via `POST /api/v1/lobbies` with `game=connect4`
+**When** I create a lobby via `POST /api/v1/lobbies` with `game={game_id}`
 **Then** a new lobby is created as public/listed
 **And** the lobby’s max seats is exactly 2
 **And** the response returns the created lobby (including its `lobby_id` and shareable URL)
@@ -310,14 +310,14 @@ So that I can invite someone or wait for another player to join.
 **When** I call `POST /api/v1/lobbies`
 **Then** the request is rejected as unauthorized
 
-**Given** I attempt to create a Connect4 lobby with a seat count other than 2
+**Given** I attempt to create a lobby with a seat count other than 2
 **When** I call `POST /api/v1/lobbies`
 **Then** the request is rejected with a validation error
 
-### Story 2.4: Join a Connect4 lobby and claim a seat
+### Story 2.4: Join a lobby and claim a seat
 
 As a signed-in user,
-I want to join a specific Connect4 lobby and claim an available seat,
+I want to join a specific lobby and claim an available seat,
 So that I can participate in the upcoming session.
 
 **Acceptance Criteria:**
@@ -341,10 +341,10 @@ So that I can participate in the upcoming session.
 **When** I call `POST /api/v1/lobbies/{lobby_id}/join`
 **Then** the request is rejected as unauthorized
 
-### Story 2.5: Auto-join an open Connect4 lobby (or create one)
+### Story 2.5: Auto-join an open lobby (or create one)
 
 As a signed-in user,
-I want to automatically get seated in an open Connect4 lobby if one exists,
+I want to automatically get seated in an open lobby for a selected game if one exists,
 So that I can start playing with minimal friction.
 
 **Acceptance Criteria:**
@@ -352,13 +352,13 @@ So that I can start playing with minimal friction.
 **FRs:** FR7, FR8
 
 **Given** I am authenticated with a valid JWT
-**When** I request auto-join via `POST /api/v1/lobbies/auto-join` with `game=connect4`
+**When** I request auto-join via `POST /api/v1/lobbies/auto-join` with `game={game_id}`
 **Then** if an open lobby with an available seat exists, I am joined to that lobby and assigned a seat
 **And** the response includes the selected `lobby_id` and shareable lobby URL
 
 **Given** there is no open lobby with available seats
-**When** I call `POST /api/v1/lobbies/auto-join` with `game=connect4`
-**Then** a new public Connect4 lobby is created (2 seats)
+**When** I call `POST /api/v1/lobbies/auto-join` with `game={game_id}`
+**Then** a new public lobby is created (2 seats)
 **And** I am joined to it and assigned a seat
 **And** the response returns the created `lobby_id` and shareable lobby URL
 
@@ -370,7 +370,7 @@ So that I can start playing with minimal friction.
 
 As a signed-in user,
 I want a shareable lobby invite link that opens the correct lobby after login,
-So that I can bring another player into my Connect4 lobby.
+So that I can bring another player into my lobby.
 
 **Acceptance Criteria:**
 
@@ -392,7 +392,7 @@ So that I can bring another player into my Connect4 lobby.
 ### Story 2.7: Responsive UI for games + lobby list + join/create + copy invite
 
 As a signed-in user,
-I want a responsive UI to select a game and join/create a Connect4 lobby (and copy an invite link),
+I want a responsive UI to select a game and join/create a lobby (and copy an invite link),
 So that I can quickly get into a lobby on desktop or mobile.
 
 **Acceptance Criteria:**
@@ -402,11 +402,11 @@ So that I can quickly get into a lobby on desktop or mobile.
 **Given** I am authenticated
 **When** I open the Games screen
 **Then** I see Connect4 as available
-**And** I see Checkers labeled “coming soon”
+**And** I see Draughts (10x10) as available
 
-**Given** I select Connect4
+**Given** I select a game
 **When** I view the lobby list
-**Then** I see the list of public Connect4 lobbies with seat availability
+**Then** I see the list of public lobbies for that game with seat availability
 **And** I can join an open lobby or create a new lobby
 
 **Given** I am in a lobby
@@ -417,6 +417,38 @@ So that I can quickly get into a lobby on desktop or mobile.
 **Given** I use a mobile browser
 **When** I view the lobby list UI
 **Then** it remains usable and readable (responsive layout)
+
+### Story 2.8: Sanitize lobby names on create
+
+As a lobby host,
+I want lobby names to be sanitized/validated,
+So that lobby listings can’t be abused with unsafe or disruptive content.
+
+**Acceptance Criteria:**
+
+**FRs:** FR8
+**NFRs:** NFR5
+
+**Given** I am authenticated
+**When** I call `POST /api/v1/lobbies` with a `name` containing disallowed characters/markup
+**Then** the server either rejects the request with a clear validation error or stores a sanitized version (per the defined sanitization policy)
+**And** the lobby list never returns unsafe markup to clients
+
+### Story 2.9: Rate limit lobby create/join attempts
+
+As the platform operator,
+I want rate limiting on lobby create/join endpoints,
+So that abusive automation can’t degrade the experience for real players.
+
+**Acceptance Criteria:**
+
+**FRs:** FR7, FR8
+**NFRs:** NFR5
+
+**Given** a single client repeatedly calls `POST /api/v1/lobbies` or `POST /api/v1/lobbies/auto-join`
+**When** the request rate exceeds the configured limit
+**Then** the server rejects excess requests with a clear rate-limit response (e.g., HTTP 429)
+**And** normal usage patterns remain unaffected
 
 ## Epic 3: Connect4 Session Control + Real-Time Gameplay
 
@@ -584,7 +616,7 @@ So that I can play moves, understand turns, and see results.
 
 **Acceptance Criteria:**
 
-**FRs:** FR28, FR18
+**FRs:** FR13, FR18
 
 **Given** I am in an active Connect4 session
 **When** the server broadcasts the canonical game state
@@ -608,7 +640,7 @@ So that I can play moves, understand turns, and see results.
 
 ## Epic 4: Draughts 10x10 (Flying Kings) Gameplay
 
-Users can play draughts/checkers on a 10x10 board with your selected rules (forced captures, maximum-capture priority, multi-jump, backward captures for men, flying kings, mutual-agreement draw).
+Users can play draughts on a 10x10 board (International Draughts) with forced captures, maximum-capture priority, multi-jump capture sequences, backward captures for men, flying kings, and mutual-agreement draw.
 
 ### Story 4.1: Initialize 10x10 draughts state (standard setup, white starts)
 
@@ -641,7 +673,7 @@ So that only legal moves are applied.
 
 **Acceptance Criteria:**
 
-**FRs:** FR23
+**FRs:** FR23, FR27
 
 **Given** it is my turn and no capture is available for my pieces
 **When** I submit a non-capture move
@@ -689,7 +721,7 @@ So that the maximum-capture rule is enforced.
 
 **Acceptance Criteria:**
 
-**FRs:** FR24
+**FRs:** FR25
 
 **Given** it is my turn and multiple capture sequences are available
 **When** I submit a capture move/sequence that does not result in the maximum capture count
@@ -708,7 +740,7 @@ So that capture turns are completed properly.
 
 **Acceptance Criteria:**
 
-**FRs:** FR25, FR26
+**FRs:** FR26, FR27
 
 **Given** I make a capture and another capture is available for that same piece
 **When** the capture is applied
@@ -728,7 +760,7 @@ So that the result is unambiguous.
 
 **Acceptance Criteria:**
 
-**FRs:** FR27
+**FRs:** FR28
 
 **Given** my opponent has no legal moves (or no pieces)
 **When** the server evaluates the game state
@@ -777,7 +809,7 @@ So that I can play the 10x10 ruleset correctly and understand errors/results.
 **When** the result is broadcast
 **Then** the UI clearly shows the final result state
 
-## Epic 5: Resilience UX — Disconnect Handling (Deferred)
+## Epic 5: Resilience UX — Disconnect Handling
 
 If a player disconnects, the system communicates loss of session and offers a fast path to continue elsewhere (no state restore in MVP).
 
@@ -840,7 +872,7 @@ So that seats free up and others can still play.
 **Then** the lobby is closed
 **And** any remaining player is informed and returned to the Games screen
 
-## Epic 6: Observability & Fair Play Signals (Deferred)
+## Epic 6: Observability & Fair Play Signals
 
 The system records session events (join, start, moves, end, kicks) for basic troubleshooting and fairness checks.
 
@@ -913,7 +945,7 @@ So that we can reconstruct gameplay sequences for troubleshooting.
 **When** ordered by `created_at` and/or `seq`
 **Then** the move timeline is reconstructable without ambiguity
 
-## Epic 7: Onboarding Speed Metrics (Deferred)
+## Epic 7: Onboarding Speed Metrics
 
 The product measures onboarding speed from login completion to session start, using anonymized metrics in Postgres.
 

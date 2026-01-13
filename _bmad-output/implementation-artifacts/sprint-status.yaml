@@ -1,0 +1,98 @@
+# generated: 2026-01-13 23:03:27
+# project: mygameplatform
+# project_key: mygameplatform
+# tracking_system: file-system
+# story_location: _bmad-output/implementation-artifacts
+
+# STATUS DEFINITIONS:
+# ==================
+# Epic Status:
+#   - backlog: Epic not yet started
+#   - in-progress: Epic actively being worked on
+#   - done: All stories in epic completed
+#
+# Epic Status Transitions:
+#   - backlog → in-progress: Automatically when first story is created (via create-story)
+#   - in-progress → done: Manually when all stories reach 'done' status
+#
+# Story Status:
+#   - backlog: Story only exists in epic file
+#   - ready-for-dev: Story file created in stories folder
+#   - in-progress: Developer actively working on implementation
+#   - review: Ready for code review (via Dev's code-review workflow)
+#   - done: Story completed
+#
+# Retrospective Status:
+#   - optional: Can be completed but not required
+#   - done: Retrospective has been completed
+#
+# WORKFLOW NOTES:
+# ===============
+# - Epic transitions to 'in-progress' automatically when first story is created
+# - Stories can be worked in parallel if team capacity allows
+# - SM typically creates next story after previous one is 'done' to incorporate learnings
+# - Dev moves story to 'review', then runs code-review (fresh context, different LLM recommended)
+
+generated: 2026-01-13 23:03:27
+project: mygameplatform
+project_key: mygameplatform
+tracking_system: file-system
+story_location: _bmad-output/implementation-artifacts
+
+development_status:
+  epic-1: in-progress
+  1-1-set-up-initial-project-from-starter-template: review
+  1-2-sign-up-with-email-password-no-payments: review
+  1-3-sign-in-on-desktopmobile-jwt: ready-for-dev
+  1-4-viewedit-basic-profile-username-optional-avatar: ready-for-dev
+  epic-1-retrospective: optional
+
+  epic-2: backlog
+  2-1-list-games-authenticated: backlog
+  2-2-list-public-lobbies-authenticated-with-seat-availability: backlog
+  2-3-create-a-public-lobby-2-seats: backlog
+  2-4-join-a-lobby-and-claim-a-seat: backlog
+  2-5-auto-join-an-open-lobby-or-create-one: backlog
+  2-6-lobby-invite-link-deep-link-after-login: backlog
+  2-7-responsive-ui-for-games-lobby-list-joincreate-copy-invite: backlog
+  2-8-sanitize-lobby-names-on-create: backlog
+  2-9-rate-limit-lobby-createjoin-attempts: backlog
+  epic-2-retrospective: optional
+
+  epic-3: backlog
+  3-1-host-starts-a-connect4-session-from-a-lobby-random-player-1: backlog
+  3-2-connect4-session-websocket-connect-auth-state-subscription: backlog
+  3-3-make-a-connect4-move-validate-broadcast-state: backlog
+  3-4-detect-connect4-windraw-and-end-the-game: backlog
+  3-5-host-ends-the-session-at-any-time: backlog
+  3-6-host-kicks-a-player-at-any-time: backlog
+  3-7-gameplay-ui-board-turn-errors-result: backlog
+  epic-3-retrospective: optional
+
+  epic-4: backlog
+  4-1-initialize-10x10-draughts-state-standard-setup-white-starts: backlog
+  4-2-validate-non-capture-moves-men-forward-only-flying-kings: backlog
+  4-3-validate-captures-enforce-forced-capture-including-backward-men-captures: backlog
+  4-4-enforce-maximum-capture-rule: backlog
+  4-5-multi-jump-capture-continuation-kinging-timing: backlog
+  4-6-draughts-outcomes-mutual-agreement-draw: backlog
+  4-7-draughts-ui-click-to-move-optional-legal-move-highlighting: backlog
+  epic-4-retrospective: optional
+
+  epic-5: backlog
+  5-1-detect-disconnect-and-end-session-no-winner: backlog
+  5-2-client-ux-for-disconnect-message-cta-to-games: backlog
+  5-3-lobby-disconnect-handling-pre-start-seat-cleanup: backlog
+  epic-5-retrospective: optional
+
+  epic-6: backlog
+  6-1-persist-session-events-in-postgres: backlog
+  6-2-record-joinstartendkick-events: backlog
+  6-3-record-move-events-with-minimal-payload-ordering: backlog
+  epic-6-retrospective: optional
+
+  epic-7: backlog
+  7-1-persist-anonymized-onboarding-funnel-events: backlog
+  7-2-compute-and-store-onboarding-duration-basic-aggregates: backlog
+  7-3-record-metrics-for-all-main-entry-paths: backlog
+  epic-7-retrospective: optional

@@ -4,10 +4,23 @@ import (
 	"encoding/json"
 	"errors"
 	"io"
+	"mime"
 	"net/http"
 )
 
 const maxJSONBodyBytes = 1 << 20 // 1 MiB
+
+func IsJSONContentType(r *http.Request) bool {
+	ct := r.Header.Get("Content-Type")
+	if ct == "" {
+		return false
+	}
+	mediaType, _, err := mime.ParseMediaType(ct)
+	if err != nil {
+		return false
+	}
+	return mediaType == "application/json"
+}
 
 func DecodeJSON(w http.ResponseWriter, r *http.Request, dst any) error {
 	r.Body = http.MaxBytesReader(w, r.Body, maxJSONBodyBytes)
@@ -30,4 +43,3 @@ func WriteJSON(w http.ResponseWriter, status int, v any) {
 	w.WriteHeader(status)
 	_ = json.NewEncoder(w).Encode(v)
 }
-

@@ -1,6 +1,6 @@
 # Story 1.2: Sign up with email + password (no payments)
 
-Status: review
+Status: done
 
 ## Story
 
@@ -125,10 +125,28 @@ GPT-5.2 (Codex CLI) — Dev “Amelia”
 - `internal/db/uuid.go`
 - `internal/errorsx/http.go`
 - `internal/httpx/json.go`
+- `internal/httpx/spa.go`
+- `internal/httpx/spa_test.go`
 - `migrations/000001_create_users_table.down.sql`
 - `migrations/000001_create_users_table.up.sql`
+- `README.md`
+- `.env.example`
 - `_bmad-output/implementation-artifacts/1-2-sign-up-with-email-password-no-payments.md`
 
 ## Change Log
 
 - 2026-01-13: Implemented `POST /api/v1/auth/signup` + `users` migrations + tests.
+- 2026-01-14: Code review fixes (password max length + better validation + content-type guard + sanitized logging + docs).
+
+## Senior Developer Review (AI)
+
+Reviewer: Amelia (DEV agent) on 2026-01-14
+
+Findings (fixed):
+- [AC#3] Add password max length guard to prevent bcrypt abuse: `internal/auth_service/signup.go`, `internal/auth_service/signup_test.go`
+- [AC#3] More actionable validation messages + Content-Type guard: `internal/auth_service/signup.go`, `internal/httpx/json.go`
+- [AC#4] Avoid logging raw error strings that can contain PII (e.g., email): `internal/auth_service/signup.go`
+- Document migrations command: `README.md`
+
+Repo state note:
+- Review detected unrelated uncommitted changes from prior story review (Story 1.1). Recommend committing Story 1.1 fixes before future reviews to keep git-based discrepancy checks clean.

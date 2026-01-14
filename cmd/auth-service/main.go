@@ -12,6 +12,7 @@ import (
 	"mygameplatform/internal/auth"
 	"mygameplatform/internal/auth_service"
 	"mygameplatform/internal/db"
+	"mygameplatform/internal/httpx"
 )
 
 func main() {
@@ -46,6 +47,20 @@ func main() {
 	users := db.NewPostgresUserStore(pool)
 	h := auth_service.NewHandler(users, signer, logger)
 
+	mux := http.NewServeMux()
+	mux.Handle("/api/", h)
+
+	webDistDir := os.Getenv("WEB_DIST_DIR")
+	if webDistDir == "" {
+		webDistDir = "web/dist"
+	}
+	if _, err := os.Stat(webDistDir); err == nil {
+		mux.Handle("/", httpx.NewSPA(http.Dir(webDistDir), "index.html"))
+	} else {
+		logger.Warn("web dist dir not found; static hosting disabled", "WEB_DIST_DIR", webDistDir, "err", err)
+		mux.Handle("/", http.NotFoundHandler())
+	}
+
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = "8080"
@@ -53,7 +68,7 @@ func main() {
 
 	srv := &http.Server{
 		Addr:              ":" + port,
-		Handler:           h,
+		Handler:           mux,
 		ReadHeaderTimeout: 5 * time.Second,
 	}
 

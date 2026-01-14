@@ -2,6 +2,7 @@ package auth_service
 
 import (
 	"errors"
+	"fmt"
 	"net/http"
 	"net/mail"
 	"strings"
@@ -14,6 +15,7 @@ import (
 )
 
 const minPasswordLength = 8
+const maxPasswordLength = 128
 
 type signupRequest struct {
 	Email    string `json:"email"`
@@ -25,22 +27,33 @@ type signupResponse struct {
 }
 
 func (h *Handler) handleSignup(w http.ResponseWriter, r *http.Request) {
+	if ct := r.Header.Get("Content-Type"); ct != "" && !httpx.IsJSONContentType(r) {
+		h.logRequest(r, http.StatusBadRequest, "validation_failed", nil)
+		errorsx.Write(w, http.StatusBadRequest, "validation_failed", "Content-Type must be application/json")
+		return
+	}
+
 	var req signupRequest
 	if err := httpx.DecodeJSON(w, r, &req); err != nil {
-		h.logRequest(r, http.StatusBadRequest, "validation_failed", err)
-		errorsx.Write(w, http.StatusBadRequest, "validation_failed", "Invalid request body")
+		h.logRequest(r, http.StatusBadRequest, "validation_failed", nil)
+		errorsx.Write(w, http.StatusBadRequest, "validation_failed", "Invalid JSON body")
 		return
 	}
 
 	email, err := normalizeAndValidateEmail(req.Email)
 	if err != nil {
-		h.logRequest(r, http.StatusBadRequest, "validation_failed", err)
-		errorsx.Write(w, http.StatusBadRequest, "validation_failed", "Invalid email")
+		h.logRequest(r, http.StatusBadRequest, "validation_failed", nil)
+		errorsx.Write(w, http.StatusBadRequest, "validation_failed", "email: invalid")
 		return
 	}
 	if len(req.Password) < minPasswordLength {
-		h.logRequest(r, http.StatusBadRequest, "validation_failed", errors.New("password too short"))
-		errorsx.Write(w, http.StatusBadRequest, "validation_failed", "Invalid password")
+		h.logRequest(r, http.StatusBadRequest, "validation_failed", nil)
+		errorsx.Write(w, http.StatusBadRequest, "validation_failed", fmt.Sprintf("password: must be at least %d characters", minPasswordLength))
+		return
+	}
+	if len(req.Password) > maxPasswordLength {
+		h.logRequest(r, http.StatusBadRequest, "validation_failed", nil)
+		errorsx.Write(w, http.StatusBadRequest, "validation_failed", fmt.Sprintf("password: must be at most %d characters", maxPasswordLength))
 		return
 	}
 
@@ -54,7 +67,7 @@ func (h *Handler) handleSignup(w http.ResponseWriter, r *http.Request) {
 	u, err := h.users.CreateUser(r.Context(), email, passwordHash)
 	if err != nil {
 		if errors.Is(err, db.ErrEmailConflict) {
-			h.logRequest(r, http.StatusConflict, "conflict", err)
+			h.logRequest(r, http.StatusConflict, "conflict", nil)
 			errorsx.Write(w, http.StatusConflict, "conflict", "Email already registered")
 			return
 		}
@@ -101,9 +114,10 @@ func (h *Handler) logRequest(r *http.Request, status int, errCode string, err er
 	if errCode != "" {
 		attrs = append(attrs, "error_code", errCode)
 	}
-	if err != nil {
-		attrs = append(attrs, "err", err.Error())
+	if err != nil && status >= 500 {
+		attrs = append(attrs, "err_kind", fmt.Sprintf("%T", err))
+		h.logger.Error("request", attrs...)
+		return
 	}
 	h.logger.Info("request", attrs...)
 }
-

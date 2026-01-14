@@ -41,8 +41,8 @@ story_location: _bmad-output/implementation-artifacts
 
 development_status:
   epic-1: in-progress
-  1-1-set-up-initial-project-from-starter-template: review
-  1-2-sign-up-with-email-password-no-payments: review
+  1-1-set-up-initial-project-from-starter-template: done
+  1-2-sign-up-with-email-password-no-payments: done
   1-3-sign-in-on-desktopmobile-jwt: ready-for-dev
   1-4-viewedit-basic-profile-username-optional-avatar: ready-for-dev
   epic-1-retrospective: optional

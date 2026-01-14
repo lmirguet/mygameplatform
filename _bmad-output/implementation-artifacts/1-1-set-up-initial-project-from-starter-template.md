@@ -1,6 +1,6 @@
 # Story 1.1: Set up initial project from starter template
 
-Status: review
+Status: done
 
 ## Story
 
@@ -119,3 +119,19 @@ GPT-5.2 (Codex CLI) — Dev “Amelia”
 - `web/tsconfig.node.json`
 - `web/vite.config.ts`
 - `_bmad-output/implementation-artifacts/1-1-set-up-initial-project-from-starter-template.md`
+
+## Senior Developer Review (AI)
+
+Reviewer: Amelia (DEV agent) on 2026-01-14
+
+Findings (fixed):
+- [AC#2] Serve `web/dist` as static assets: `cmd/auth-service/main.go`
+- [AC#3] Document baseline checks + static hosting env: `README.md`, `.env.example`
+- Add tests for SPA static hosting behavior: `internal/httpx/spa_test.go`
+
+Notes:
+- This review workflow’s git-diff checks only detect *uncommitted* changes; repository was clean at review time.
+
+### Change Log
+
+- 2026-01-14: Code review fixes applied (static hosting + docs + tests).

@@ -13,6 +13,16 @@ Browser-based multiplayer board-game platform (Connect4 + Draughts (10x10)).
 
 ## Local Development (baseline)
 
-- Go: run `go test ./...`
-- Web (once initialized): `cd web && npm install && npm run dev`
+- Go checks: `go test ./...`
+- Web dev: `cd web && npm install && npm run dev`
+- Web prod build: `cd web && npm run build` (outputs static assets to `web/dist`)
 
+## Auth service (static hosting)
+
+`auth-service` serves static assets from `WEB_DIST_DIR` (default: `web/dist`) and exposes auth APIs under `/api/v1/...`.
+
+## Database migrations
+
+Migrations live in `migrations/` (SQL is the source of truth). Apply them with `golang-migrate/migrate`, for example:
+
+- `migrate -path migrations -database "$DATABASE_URL" up`

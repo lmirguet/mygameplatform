@@ -170,3 +170,53 @@ func TestSignup_InvalidInput_400ValidationFailed(t *testing.T) {
 		t.Fatalf("expected validation_failed error code, got %s", rec.Body.String())
 	}
 }
+
+func TestSignup_TooLongPassword_400ValidationFailed(t *testing.T) {
+	users := newFakeUserStore()
+	logger := slog.New(&captureHandler{})
+	signer, err := auth.NewHS256Signer([]byte("test-secret"), nil)
+	if err != nil {
+		t.Fatalf("NewHS256Signer: %v", err)
+	}
+	h := NewHandler(users, signer, logger)
+
+	body := map[string]any{
+		"email":    "user@example.com",
+		"password": strings.Repeat("a", maxPasswordLength+1),
+	}
+	b, _ := json.Marshal(body)
+	req := httptest.NewRequest(http.MethodPost, "/api/v1/auth/signup", bytes.NewReader(b))
+	rec := httptest.NewRecorder()
+
+	h.ServeHTTP(rec, req)
+
+	if rec.Code != http.StatusBadRequest {
+		t.Fatalf("expected 400, got %d: %s", rec.Code, rec.Body.String())
+	}
+	if !strings.Contains(rec.Body.String(), `"error":"validation_failed"`) {
+		t.Fatalf("expected validation_failed error code, got %s", rec.Body.String())
+	}
+}
+
+func TestSignup_InvalidContentType_400ValidationFailed(t *testing.T) {
+	users := newFakeUserStore()
+	logger := slog.New(&captureHandler{})
+	signer, err := auth.NewHS256Signer([]byte("test-secret"), nil)
+	if err != nil {
+		t.Fatalf("NewHS256Signer: %v", err)
+	}
+	h := NewHandler(users, signer, logger)
+
+	req := httptest.NewRequest(http.MethodPost, "/api/v1/auth/signup", strings.NewReader(`{"email":"user@example.com","password":"password123"}`))
+	req.Header.Set("Content-Type", "text/plain")
+	rec := httptest.NewRecorder()
+
+	h.ServeHTTP(rec, req)
+
+	if rec.Code != http.StatusBadRequest {
+		t.Fatalf("expected 400, got %d: %s", rec.Code, rec.Body.String())
+	}
+	if !strings.Contains(rec.Body.String(), `"error":"validation_failed"`) {
+		t.Fatalf("expected validation_failed error code, got %s", rec.Body.String())
+	}
+}

@@ -1,6 +1,6 @@
 # Story 2.1: List games (authenticated)
 
-Status: ready-for-dev
+Status: done
 
 <!-- Note: Validation is optional. Run validate-create-story for quality check before dev-story. -->
 
@@ -18,17 +18,17 @@ so that I can choose what to play next.
 
 ## Tasks / Subtasks
 
-- [ ] Build lobby-service HTTP server skeleton and routing (AC: 1-3)
-  - [ ] Create `cmd/lobby-service/main.go` HTTP server similar to auth-service (env config, logger, mux, timeouts)
-  - [ ] Add `internal/lobby_service/handler.go` (or similar) with router for `/api/v1/games`
-  - [ ] Implement auth middleware using `internal/auth` verifier and `Authorization: Bearer` header (reuse error format from `internal/errorsx`)
-- [ ] Implement `/api/v1/games` handler (AC: 1-3)
-  - [ ] Return JSON with a stable list of games (no DB yet) and basic rules/players info
-  - [ ] Ensure JSON uses `snake_case` fields and error codes match `errorsx` conventions
-  - [ ] Ensure request logging does not record Authorization header or tokenized URLs
-- [ ] Add tests for lobby-service games list (AC: 1-3)
-  - [ ] Unit test auth middleware and unauthorized response
-  - [ ] Integration-style test for `/api/v1/games` happy path (valid JWT)
+- [x] Build lobby-service HTTP server skeleton and routing (AC: 1-3)
+  - [x] Create `cmd/lobby-service/main.go` HTTP server similar to auth-service (env config, logger, mux, timeouts)
+  - [x] Add `internal/lobby_service/handler.go` (or similar) with router for `/api/v1/games`
+  - [x] Implement auth middleware using `internal/auth` verifier and `Authorization: Bearer` header (reuse error format from `internal/errorsx`)
+- [x] Implement `/api/v1/games` handler (AC: 1-3)
+  - [x] Return JSON with a stable list of games (no DB yet) and basic rules/players info
+  - [x] Ensure JSON uses `snake_case` fields and error codes match `errorsx` conventions
+  - [x] Ensure request logging does not record Authorization header or tokenized URLs
+- [x] Add tests for lobby-service games list (AC: 1-3)
+  - [x] Unit test auth middleware and unauthorized response
+  - [x] Integration-style test for `/api/v1/games` happy path (valid JWT)
 
 ## Dev Notes
 
@@ -78,13 +78,36 @@ GPT-5 (Codex CLI)
 
 ### Debug Log References
 
+### Implementation Plan
+
+- Implement lobby-service HTTP server skeleton, routing, and auth middleware first; keep games handler stubbed until task 2 to preserve task order.
+
 ### Completion Notes List
 
 - Ultimate context engine analysis completed - comprehensive developer guide created
+- Implemented lobby-service server skeleton with `/api/v1/games` routing + auth middleware; added initial auth-required test. Tests: `go test ./internal/lobby_service`, `go test ./cmd/... ./internal/...` (note: `go test ./...` fails due to `pkg/mod` directory in repo).
+- Implemented `/api/v1/games` response with Connect4 + Draughts (10x10) and added catalog + log-safety tests. Tests: `go test ./internal/lobby_service`, `go test ./cmd/... ./internal/...`.
+- Completed lobby-service games list test coverage (auth required + catalog happy path). Tests: `go test ./cmd/... ./internal/...`.
+- Story 2.1 complete; status moved to review. Tests: `go test ./cmd/... ./internal/...` (note: `go test ./...` still fails due to repo `pkg/mod`).
+- Code review fixes: added integration test under `test/integration/` and switched lobby-service logs to JSON. Tests: `go test ./cmd/... ./internal/... ./test/...`.
 
 ### File List
 
 - `/_bmad-output/implementation-artifacts/2-1-list-games-authenticated.md`
+- `/_bmad-output/implementation-artifacts/sprint-status.yaml`
+- `cmd/lobby-service/main.go`
+- `internal/lobby_service/auth_middleware.go`
+- `internal/lobby_service/games.go`
+- `internal/lobby_service/games_test.go`
+- `internal/lobby_service/handler.go`
+- `internal/lobby_service/handler_test.go`
+- `internal/lobby_service/log.go`
+- `test/integration/lobby_service_test.go`
+
+### Change Log
+
+- 2026-01-15: Implemented lobby-service games catalog endpoint + auth middleware; added tests and logging safeguards.
+- 2026-01-15: Code review fixes: JSON logging + integration test placement.
 
 ## Developer Context
 
@@ -159,5 +182,5 @@ GPT-5 (Codex CLI)
 
 ## Story Completion Status
 
-- Status set to **ready-for-dev**.
+- Status set to **done**.
 - Completion note added: “Ultimate context engine analysis completed - comprehensive developer guide created”.

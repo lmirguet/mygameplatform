@@ -1,6 +1,6 @@
 # Story 1.3: Sign in on desktop/mobile (JWT)
 
-Status: ready-for-dev
+Status: done
 
 ## Story
 
@@ -16,28 +16,28 @@ so that I can access lobbies and gameplay as an authenticated user.
 
 ## Tasks / Subtasks
 
-- [ ] Preconditions (depends on Story 1.2) (AC: #1)
-  - [ ] Ensure `users` table exists and passwords are stored as bcrypt hashes.
-- [ ] Implement `POST /api/v1/auth/login` in `auth-service` (AC: #1–#3)
-  - [ ] Validate request body (email + password required).
-  - [ ] Lookup user by email (use same email canonicalization strategy as signup).
-  - [ ] Verify password using bcrypt compare against stored hash.
-  - [ ] On success: issue JWT access token (minimum claim: `sub` = user id; TTL from config once defined).
-  - [ ] Return success response with access token.
-- [ ] Prevent account enumeration (AC: #2)
-  - [ ] For invalid email OR invalid password, return the same error code + message (do not reveal existence).
-  - [ ] Consider constant-time-ish behavior where feasible (at minimum: avoid early returns that create obvious timing gaps).
-- [ ] Apply rate limiting (AC: #2)
-  - [ ] Enforce per-IP rate limiting on unauthenticated login attempts (instance-local in MVP).
-  - [ ] Use standard error format for rate-limited responses.
-- [ ] Logging + security guardrails (AC: #3)
-  - [ ] Never log passwords/password hashes.
-  - [ ] Never log JWTs or tokenized URLs.
-  - [ ] Log failures in a way that supports troubleshooting without leaking credentials.
-- [ ] Add tests (AC: #1–#3)
-  - [ ] Successful login returns token for known user.
-  - [ ] Invalid credentials returns `invalid_credentials` and does not indicate whether email exists.
-  - [ ] Rate limiting returns `{ "error": "rate_limited", "message": "Too many requests" }` (or consistent equivalent).
+- [x] Preconditions (depends on Story 1.2) (AC: #1)
+  - [x] Ensure `users` table exists and passwords are stored as bcrypt hashes.
+- [x] Implement `POST /api/v1/auth/login` in `auth-service` (AC: #1–#3)
+  - [x] Validate request body (email + password required).
+  - [x] Lookup user by email (use same email canonicalization strategy as signup).
+  - [x] Verify password using bcrypt compare against stored hash.
+  - [x] On success: issue JWT access token (minimum claim: `sub` = user id; TTL from config once defined).
+  - [x] Return success response with access token.
+- [x] Prevent account enumeration (AC: #2)
+  - [x] For invalid email OR invalid password, return the same error code + message (do not reveal existence).
+  - [x] Consider constant-time-ish behavior where feasible (at minimum: avoid early returns that create obvious timing gaps).
+- [x] Apply rate limiting (AC: #2)
+  - [x] Enforce per-IP rate limiting on unauthenticated login attempts (instance-local in MVP).
+  - [x] Use standard error format for rate-limited responses.
+- [x] Logging + security guardrails (AC: #3)
+  - [x] Never log passwords/password hashes.
+  - [x] Never log JWTs or tokenized URLs.
+  - [x] Log failures in a way that supports troubleshooting without leaking credentials.
+- [x] Add tests (AC: #1–#3)
+  - [x] Successful login returns token for known user.
+  - [x] Invalid credentials returns `invalid_credentials` and does not indicate whether email exists.
+  - [x] Rate limiting returns `{ "error": "rate_limited", "message": "Too many requests" }` (or consistent equivalent).
 
 ## Dev Notes
 
@@ -90,7 +90,24 @@ GPT-5.2 (Codex CLI) — SM “Bob”
 ### Completion Notes List
 
 - Comprehensive story context created; includes anti-enumeration requirement and rate-limiting note.
+- Implemented login handler with email normalization, bcrypt verification, JWT issuance, and non-enumeration error handling.
+- Added per-IP rate limiting for login and ensured sensitive values are not logged.
+- Tests added for success, invalid credentials parity, and rate limiting.
+- Test run: `go test ./cmd/... ./internal/...` (note: `go test ./...` is blocked by local `pkg/` module cache outside module).
+- Code review fixes: trust proxy headers for rate limiting, env-configured rate limit settings, limiter cleanup for expired buckets.
+- Tests added for proxy-aware rate limiting; updated `.gitignore` to ignore local `pkg/` module cache.
+- `README.md` was already modified in the working tree; not changed during this review, but listed for completeness.
 
 ### File List
 
 - `_bmad-output/implementation-artifacts/1-3-sign-in-on-desktopmobile-jwt.md`
+- `.gitignore`
+- `README.md`
+- `cmd/auth-service/main.go`
+- `internal/auth_service/handler.go`
+- `internal/auth_service/login.go`
+- `internal/auth_service/login_test.go`
+- `internal/auth_service/rate_limiter.go`
+- `internal/auth_service/signup_test.go`
+- `internal/db/postgres_users.go`
+- `internal/db/users.go`

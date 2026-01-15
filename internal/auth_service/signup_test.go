@@ -40,23 +40,57 @@ func (h *captureHandler) WithGroup(string) slog.Handler      { return h }
 type fakeUserStore struct {
 	lastEmail        string
 	lastPasswordHash string
-	usersByEmail     map[string]db.User
+	usersByEmail     map[string]userRecord
+}
+
+type userRecord struct {
+	user         db.User
+	passwordHash string
 }
 
 func newFakeUserStore() *fakeUserStore {
-	return &fakeUserStore{usersByEmail: map[string]db.User{}}
+	return &fakeUserStore{usersByEmail: map[string]userRecord{}}
 }
 
-func (s *fakeUserStore) CreateUser(_ context.Context, email, passwordHash string) (db.User, error) {
+func (s *fakeUserStore) CreateUser(_ context.Context, email, passwordHash, username string, avatarURL *string) (db.User, error) {
 	s.lastEmail = email
 	s.lastPasswordHash = passwordHash
 
 	if _, ok := s.usersByEmail[email]; ok {
 		return db.User{}, db.ErrEmailConflict
 	}
-	u := db.User{ID: "00000000-0000-0000-0000-000000000001", Email: email}
-	s.usersByEmail[email] = u
+	u := db.User{ID: "00000000-0000-0000-0000-000000000001", Email: email, Username: username, AvatarURL: avatarURL}
+	s.usersByEmail[email] = userRecord{user: u, passwordHash: passwordHash}
 	return u, nil
+}
+
+func (s *fakeUserStore) FindUserByEmail(_ context.Context, email string) (db.UserWithPassword, error) {
+	rec, ok := s.usersByEmail[email]
+	if !ok {
+		return db.UserWithPassword{}, db.ErrUserNotFound
+	}
+	return db.UserWithPassword{ID: rec.user.ID, Email: rec.user.Email, PasswordHash: rec.passwordHash}, nil
+}
+
+func (s *fakeUserStore) GetUserByID(_ context.Context, id string) (db.User, error) {
+	for _, rec := range s.usersByEmail {
+		if rec.user.ID == id {
+			return rec.user, nil
+		}
+	}
+	return db.User{}, db.ErrUserNotFound
+}
+
+func (s *fakeUserStore) UpdateUserProfile(_ context.Context, id, username string, avatarURL *string) (db.User, error) {
+	for key, rec := range s.usersByEmail {
+		if rec.user.ID == id {
+			rec.user.Username = username
+			rec.user.AvatarURL = avatarURL
+			s.usersByEmail[key] = rec
+			return rec.user, nil
+		}
+	}
+	return db.User{}, db.ErrUserNotFound
 }
 
 func TestSignup_Success_ReturnsTokenAndPersistsUser(t *testing.T) {
@@ -124,7 +158,7 @@ func TestSignup_DuplicateEmail_409Conflict(t *testing.T) {
 	}
 	h := NewHandler(users, signer, logger)
 
-	_, _ = users.CreateUser(context.Background(), "user@example.com", "x")
+	_, _ = users.CreateUser(context.Background(), "user@example.com", "x", "user_example", nil)
 
 	body := map[string]any{
 		"email":    "user@example.com",

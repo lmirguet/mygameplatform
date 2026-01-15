@@ -1,6 +1,6 @@
 # Story 1.4: View/edit basic profile (username, optional avatar)
 
-Status: ready-for-dev
+Status: done
 
 ## Story
 
@@ -16,26 +16,26 @@ so that my identity is visible and consistent in lobbies and games.
 
 ## Tasks / Subtasks
 
-- [ ] Preconditions (depends on Story 1.2 / 1.3) (AC: #1–#3)
-  - [ ] Ensure JWT auth middleware exists for REST endpoints.
-  - [ ] Ensure `users` table exists and includes a stable user id used for `sub` claim.
-- [ ] Extend user model/storage for profile fields (AC: #1–#2)
-  - [ ] Add `username` column (required) to `users` table (migration in `migrations/`).
-  - [ ] Add `avatar_url` column (nullable) (or equivalent) to `users` table.
-  - [ ] Define username validation rules (min/max length, allowed chars, uniqueness policy if required).
-- [ ] Implement `GET /api/v1/me` (AC: #1)
-  - [ ] Authenticate via JWT and derive user id from token `sub`.
-  - [ ] Return profile JSON with at least `{ "username": "...", "avatar_url": "..." }` (snake_case).
-- [ ] Implement `PATCH /api/v1/me` (AC: #2–#3)
-  - [ ] Authenticate via JWT and derive user id from token `sub`.
-  - [ ] Validate payload (reject empty username; enforce validation policy).
-  - [ ] Persist updates and return updated profile (or 204 + subsequent GET reflects changes; choose once and keep consistent).
-  - [ ] Ensure validation failures return `{ "error": "validation_failed", "message": "..." }`.
-- [ ] Add tests (AC: #1–#3)
-  - [ ] `GET /api/v1/me` returns 401 when unauthenticated.
-  - [ ] `GET /api/v1/me` returns current profile for authenticated user.
-  - [ ] `PATCH /api/v1/me` updates username/avatar and subsequent GET reflects changes.
-  - [ ] `PATCH /api/v1/me` rejects invalid username with `validation_failed`.
+- [x] Preconditions (depends on Story 1.2 / 1.3) (AC: #1–#3)
+  - [x] Ensure JWT auth middleware exists for REST endpoints.
+  - [x] Ensure `users` table exists and includes a stable user id used for `sub` claim.
+- [x] Extend user model/storage for profile fields (AC: #1–#2)
+  - [x] Add `username` column (required) to `users` table (migration in `migrations/`).
+  - [x] Add `avatar_url` column (nullable) (or equivalent) to `users` table.
+  - [x] Define username validation rules (min/max length, allowed chars, uniqueness policy if required).
+- [x] Implement `GET /api/v1/me` (AC: #1)
+  - [x] Authenticate via JWT and derive user id from token `sub`.
+  - [x] Return profile JSON with at least `{ "username": "...", "avatar_url": "..." }` (snake_case).
+- [x] Implement `PATCH /api/v1/me` (AC: #2–#3)
+  - [x] Authenticate via JWT and derive user id from token `sub`.
+  - [x] Validate payload (reject empty username; enforce validation policy).
+  - [x] Persist updates and return updated profile (or 204 + subsequent GET reflects changes; choose once and keep consistent).
+  - [x] Ensure validation failures return `{ "error": "validation_failed", "message": "..." }`.
+- [x] Add tests (AC: #1–#3)
+  - [x] `GET /api/v1/me` returns 401 when unauthenticated.
+  - [x] `GET /api/v1/me` returns current profile for authenticated user.
+  - [x] `PATCH /api/v1/me` updates username/avatar and subsequent GET reflects changes.
+  - [x] `PATCH /api/v1/me` rejects invalid username with `validation_failed`.
 
 ## Dev Notes
 
@@ -86,7 +86,33 @@ GPT-5.2 (Codex CLI) — SM “Bob”
 ### Completion Notes List
 
 - Comprehensive story context created for profile read/update endpoints.
+- Added JWT verification support and auth guard for `/api/v1/me`.
+- Added profile columns migration and user store profile getters/updaters.
+- Implemented GET/PATCH profile endpoints with validation and error handling.
+- Tests added for authenticated/unauthenticated profile flows.
+- Test run: `go test ./cmd/... ./internal/...`.
+- Code review fixes: JWT auth middleware added for REST, username policy clarified (non-unique in MVP), migration backfill now normalizes to validation rules.
+- Repo contains unrelated uncommitted changes; File List includes current working tree for transparency.
 
 ### File List
 
 - `_bmad-output/implementation-artifacts/1-4-viewedit-basic-profile-username-optional-avatar.md`
+- `.gitignore`
+- `README.md`
+- `_bmad-output/implementation-artifacts/1-3-sign-in-on-desktopmobile-jwt.md`
+- `_bmad-output/implementation-artifacts/sprint-status.yaml`
+- `cmd/auth-service/main.go`
+- `internal/auth/jwt_hs256.go`
+- `internal/auth_service/handler.go`
+- `internal/auth_service/auth_middleware.go`
+- `internal/auth_service/login.go`
+- `internal/auth_service/login_test.go`
+- `internal/auth_service/profile.go`
+- `internal/auth_service/profile_test.go`
+- `internal/auth_service/rate_limiter.go`
+- `internal/auth_service/signup.go`
+- `internal/auth_service/signup_test.go`
+- `internal/db/postgres_users.go`
+- `internal/db/users.go`
+- `migrations/000002_add_user_profile_fields.up.sql`
+- `migrations/000002_add_user_profile_fields.down.sql`

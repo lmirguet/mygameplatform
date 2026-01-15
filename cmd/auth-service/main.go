@@ -45,7 +45,37 @@ func main() {
 	}
 
 	users := db.NewPostgresUserStore(pool)
+
+	rateLimitPerMinute := 10
+	if v := os.Getenv("LOGIN_RATE_LIMIT_PER_MINUTE"); v != "" {
+		parsed, err := strconv.Atoi(v)
+		if err != nil || parsed <= 0 {
+			log.Fatalf("LOGIN_RATE_LIMIT_PER_MINUTE: %v", err)
+		}
+		rateLimitPerMinute = parsed
+	}
+
+	rateLimitWindowSeconds := 60
+	if v := os.Getenv("LOGIN_RATE_LIMIT_WINDOW_SECONDS"); v != "" {
+		parsed, err := strconv.Atoi(v)
+		if err != nil || parsed <= 0 {
+			log.Fatalf("LOGIN_RATE_LIMIT_WINDOW_SECONDS: %v", err)
+		}
+		rateLimitWindowSeconds = parsed
+	}
+
+	trustProxyHeaders := false
+	if v := os.Getenv("TRUST_PROXY_HEADERS"); v != "" {
+		parsed, err := strconv.ParseBool(v)
+		if err != nil {
+			log.Fatalf("TRUST_PROXY_HEADERS: %v", err)
+		}
+		trustProxyHeaders = parsed
+	}
+
 	h := auth_service.NewHandler(users, signer, logger)
+	h.SetLimiter(auth_service.NewRateLimiter(rateLimitPerMinute, time.Duration(rateLimitWindowSeconds)*time.Second))
+	h.SetTrustProxyHeaders(trustProxyHeaders)
 
 	mux := http.NewServeMux()
 	mux.Handle("/api/", h)

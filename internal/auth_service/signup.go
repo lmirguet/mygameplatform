@@ -64,7 +64,8 @@ func (h *Handler) handleSignup(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	u, err := h.users.CreateUser(r.Context(), email, passwordHash)
+	username := defaultUsernameFromEmail(email)
+	u, err := h.users.CreateUser(r.Context(), email, passwordHash, username, nil)
 	if err != nil {
 		if errors.Is(err, db.ErrEmailConflict) {
 			h.logRequest(r, http.StatusConflict, "conflict", nil)

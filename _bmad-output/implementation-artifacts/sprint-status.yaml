@@ -48,15 +48,15 @@ development_status:
   epic-1-retrospective: done
 
   epic-2: in-progress
-  2-1-list-games-authenticated: backlog
-  2-2-list-public-lobbies-authenticated-with-seat-availability: backlog
-  2-3-create-a-public-lobby-2-seats: backlog
-  2-4-join-a-lobby-and-claim-a-seat: backlog
-  2-5-auto-join-an-open-lobby-or-create-one: backlog
-  2-6-lobby-invite-link-deep-link-after-login: backlog
-  2-7-responsive-ui-for-games-lobby-list-joincreate-copy-invite: backlog
-  2-8-sanitize-lobby-names-on-create: backlog
-  2-9-rate-limit-lobby-createjoin-attempts: backlog
+  2-1-list-games-authenticated: ready-for-dev
+  2-2-list-public-lobbies-authenticated-with-seat-availability: ready-for-dev
+  2-3-create-a-public-lobby-2-seats: ready-for-dev
+  2-4-join-a-lobby-and-claim-a-seat: ready-for-dev
+  2-5-auto-join-an-open-lobby-or-create-one: ready-for-dev
+  2-6-lobby-invite-link-deep-link-after-login: ready-for-dev
+  2-7-responsive-ui-for-games-lobby-list-joincreate-copy-invite: ready-for-dev
+  2-8-sanitize-lobby-names-on-create: ready-for-dev
+  2-9-rate-limit-lobby-createjoin-attempts: ready-for-dev
   epic-2-retrospective: optional
 
   epic-3: backlog
